@@ -1,4 +1,6 @@
-需自行配置bg.jpg，位置为
+#前端部分
+
+###需自行配置bg.jpg，位置为
 ```
 /src/assets/bg.jpg
 ```
@@ -19,5 +21,3 @@ npm run serve
 npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
