@@ -89,6 +89,8 @@
           label="预算（万）"
           align="center"
           width="170"
+          :sortable="true"
+          :sort-by="SortByBudget"
         >
         </el-table-column>
         <el-table-column
@@ -329,6 +331,11 @@ export default {
         this.allTableData = res.data;
         this.setPaginations();
       });
+    },
+    SortByBudget(obj1, obj2) {
+      let val1 = obj1.budget;
+      let val2 = obj2.budget;
+      return val1 - val2;
     },
   },
   components: {
