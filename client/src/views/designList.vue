@@ -90,7 +90,8 @@
           align="center"
           width="170"
           :sortable="true"
-          :sort-by="SortByBudget"
+          :sort-orders="[`ascending`, `descending`, null]"
+          :sort-method="SortByBudget"
         >
         </el-table-column>
         <el-table-column
