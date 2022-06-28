@@ -66,9 +66,9 @@
         >
         </el-table-column>
         <el-table-column
+          align="center"
           prop="operation"
           label="操作"
-          align="center"
           fixed="right"
         >
           <template slot-scope="scope">
@@ -113,7 +113,7 @@
         </el-descriptions>
       </div>
     </template>
-      <div class="Charts" id="Charts" style="width: 100%; height: 100%"></div>
+    <div class="Charts" id="Charts" style="width: 100%; height: 100%"></div>
   </div>
 </template>
 
@@ -244,7 +244,6 @@ export default {
   margin-top: 15px;
   box-sizing: border-box;
   overflow: hidden;
-  
 }
 .btnright {
   float: right;
