@@ -1,8 +1,8 @@
 # Landscape-Design-Project-Management
 
-数据库使用 MySQL5.7，前端为Vue2.0
+数据库使用 MySQL5.7，前端为Vue2.0 + ElementUI
 
-# server
+# Server
 
 ### Server setup
 
