@@ -54,8 +54,10 @@ export default {
         xAxis: {
           type: "category",
           data: this.namedata,
-          axisLable: {
+          boundaryGap: [0, 0.1],
+          axisLabel: {
             interval: 0,
+            rotate: 40,
           },
           splitLine: {
             show: false,
@@ -67,6 +69,8 @@ export default {
         grid: [
           {
             right: "45%",
+            left: "5%",
+            bottom: "20%",
           },
         ],
         series: [
@@ -78,6 +82,7 @@ export default {
           },
           {
             type: "bar",
+            name: this.namedata,
             data: this.valuedata,
           },
         ],
