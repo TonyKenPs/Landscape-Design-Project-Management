@@ -89,7 +89,7 @@
       </el-table>
     </div>
     <Dialog
-      :dialog="dialog"
+      :dialog="edialog"
       :formData="formData"
       @update="getDepartmentName"
     ></Dialog>
@@ -125,18 +125,12 @@ export default {
     return {
       tableData: [],
       BudgetData: [],
-      formData: {
-        name: "",
-        department_id: "",
-        budget: "",
-        id: "",
-      },
       designData: {
         id: "",
         department_id: "",
         total_budget: "",
       },
-      dialog: {
+      edialog: {
         show: false,
         title: "",
         option: "edit",
@@ -180,7 +174,7 @@ export default {
     },
     handleEdit(index, row) {
       //编辑方法
-      this.dialog = {
+      this.edialog = {
         show: true,
         title: "修改部门信息",
         option: "edit",
@@ -209,7 +203,7 @@ export default {
     },
     handleAdd(index, row) {
       //编辑方法
-      this.dialog = {
+      this.edialog = {
         show: true,
         title: "添加部门信息",
         option: "add",
@@ -220,7 +214,7 @@ export default {
         budget: "",
         id: "",
       };
-      this.dialog.show = true;
+      this.edialog.show = true;
     },
   },
   components: {
