@@ -11,6 +11,8 @@ export default {
   data() {
     return {
       total: [],
+      namedata: [],
+      valuedata: [],
     };
   },
   created() {
@@ -25,6 +27,10 @@ export default {
       this.$axios
         .get("/api/design/designchartdata")
         .then((res) => {
+          for (let i of res.data) {
+            this.namedata.push(i.name);
+            this.valuedata.push(i.value);
+          }
           //后端已将对应数据名称替换成Echarts对应名称
           //同步获取数据会有错误，需要转换数据进行数据读取
           var thisdata = JSON.stringify(res.data);
@@ -39,19 +45,42 @@ export default {
         theChart.resize();
       };
       var option = {
+        tooltip: {},
         title: {
           text: "项目预算",
           left: "center",
-          top: "center",
+          top: 10,
         },
+        xAxis: {
+          type: "category",
+          data: this.namedata,
+          axisLable: {
+            interval: 0,
+          },
+          splitLine: {
+            show: false,
+          },
+        },
+        yAxis: {
+          type: "value",
+        },
+        grid: [
+          {
+            right: "45%",
+          },
+        ],
         series: [
           {
             type: "pie",
-            radius:[70,300],
+            radius: [0, "50%"],
+            center: ["80%", "50%"],
             data: this.total,
           },
+          {
+            type: "bar",
+            data: this.valuedata,
+          },
         ],
-        roseType: "area",
       };
       theChart.setOption(option);
     },
