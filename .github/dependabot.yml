@@ -10,12 +10,14 @@ updates:
     directory: "/client"
     schedule:
       interval: "daily"
+    rebase-strategy: "auto"
 
   # ===== 后端（Node/Koa）=====
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
+    rebase-strategy: "auto"
 
   # ===== GitHub Actions 自身 =====
   - package-ecosystem: "github-actions"
