@@ -20,6 +20,13 @@ jobs:
           node-version: 18
 
       # ========================
+      # 后端 Build（server）
+      # ========================
+      - name: Install Backend Dependencies
+        run: |
+          npm install
+
+      # ========================
       # 前端 Build（client）
       # ========================
       - name: Install Frontend Dependencies
@@ -31,14 +38,6 @@ jobs:
         run: |
           cd client
           npm run build
-
-      # ========================
-      # 后端 Build（server）
-      # ========================
-      - name: Install Backend Dependencies
-        run: |
-          cd server
-          npm install
 
       - name: Dependabot metadata
         uses: dependabot/fetch-metadata@v2
