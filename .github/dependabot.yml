@@ -13,7 +13,7 @@ updates:
 
   # ===== 后端（Node/Koa）=====
   - package-ecosystem: "npm"
-    directory: "/server"
+    directory: "/"
     schedule:
       interval: "daily"
 
