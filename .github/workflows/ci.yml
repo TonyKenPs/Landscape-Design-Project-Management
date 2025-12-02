@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # ========================
+      # 前端 Build（client）
+      # ========================
+      - name: Install Frontend Dependencies
+        run: |
+          cd client
+          npm install
+
+      - name: Build Frontend
+        run: |
+          cd client
+          npm run build
+
+      # ========================
+      # 后端 Build（server）
+      # ========================
+      - name: Install Backend Dependencies
+        run: |
+          cd server
+          npm install
+
+      - name: Dependabot metadata
+        uses: dependabot/fetch-metadata@v2
+        if: ${{ github.actor == 'dependabot[bot]' }}
