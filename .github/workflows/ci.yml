@@ -36,13 +36,11 @@ jobs:
       # ========================
       - name: Install Frontend Dependencies
         run: |
-          cd client
-          npm install
+          cd client && npm install --legacy-peer-deps
 
       - name: Build Frontend
         run: |
-          cd client
-          npm run build
+          cd client && npm run build
 
       - name: Dependabot metadata
         uses: dependabot/fetch-metadata@v2
