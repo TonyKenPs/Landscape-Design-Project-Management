@@ -28,7 +28,7 @@
   </div>
 </template>
 <script>
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 export default {
   name: "infoshow",
   data() {

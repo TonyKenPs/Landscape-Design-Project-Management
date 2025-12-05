@@ -86,7 +86,6 @@
 <script>
 export default {
   name: "register",
-  components: {},
   data() {
     var validatePass = (rule, value, callback) => {
       if (value !== this.registerUser.password) {
@@ -190,18 +189,15 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          this.$axios
-            .post("/api/login/register", this.registerUser)
-            .then((res) => {
-              //Success
-              this.$message({
-                message: "Success,成功注册!",
-                type: "success",
-              });
-            });
-          this.$router.push("/login");
+          try {
+            await this.$axios.post("/api/login/register", this.registerUser);
+            this.$message.success("注册成功！");
+            this.$router.push("/login");
+          } catch (err) {
+            this.$message.error("注册失败，请重试");
+          }
         }
       });
     },
@@ -211,36 +207,38 @@ export default {
 
 <style scoped>
 .register {
-  position: relative;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background: url(../assets/bg.jpg) no-repeat center center;
-  background-size: 100% 100%;
+  background-size: cover;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .form_container {
-  width: 370px;
-  height: 210px;
-  position: absolute;
-  top: 10%;
-  left: 45%;
-  padding: 25px;
-  border-radius: 5px;
-  text-align: center;
+  width: 420px;
+  padding: 30px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
-.form_container .manage_tip .title {
-  font-family: "Microsoft YaHei";
+.manage_tip .title {
+  display: block;
   font-weight: bold;
   font-size: 26px;
-  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 }
+
 .registerForm {
-  margin-top: 20px;
-  background-color: #fff;
-  padding: 20px 40px 20px 20px;
-  border-radius: 5px;
-  box-shadow: 0px 5px 10px #cccc;
+  width: 100%;
 }
+
 .submit_btn {
   width: 100%;
+  margin-top: 15px;
 }
 </style>

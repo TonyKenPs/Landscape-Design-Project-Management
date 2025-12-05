@@ -3,31 +3,55 @@
     <router-view />
   </div>
 </template>
+
 <script>
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+
 export default {
-  name: "app",
-  components: {},
+  name: "App",
+
   created() {
-    if (localStorage.token) {
-      const decoded = jwt_decode(localStorage.token);
-      this.$store.dispatch("setAuthenticated", !this.isEmpty(decoded));
-      this.$store.dispatch("setUser", decoded);
-      this.$store.dispatch("setIdentity", localStorage.identity);
+    // 未登录情况：清空 store
+    if (!localStorage.token) {
+      this.$store.dispatch("clearCurrentState");
+      return;
     }
-  },
-  methods: {
-    isEmpty(value) {
-      return (
-        value === undefined ||
-        value === null ||
-        (typeof value === "object" && Object.keys(value).length === 0) ||
-        (typeof value === "string" && value.trim().length === 0)
-      );
-    },
+
+    // 解析 token
+    let decoded;
+    try {
+      decoded = jwt_decode(localStorage.token);
+    } catch (err) {
+      localStorage.removeItem("token");
+      this.$store.dispatch("clearCurrentState");
+      return;
+    }
+
+    // 过期检查
+    const now = Date.now() / 1000;
+    if (decoded.exp && decoded.exp < now) {
+      localStorage.removeItem("token");
+      this.$store.dispatch("clearCurrentState");
+      return;
+    }
+
+    // 正常设置
+    this.$store.dispatch("setAuthenticated", true);
+    this.$store.dispatch("setUser", decoded);
+
+    // identity 解析
+    let identity = {};
+    try {
+      identity = localStorage.identity ? JSON.parse(localStorage.identity) : {};
+    } catch (e) {
+      identity = {};
+    }
+
+    this.$store.dispatch("setIdentity", identity);
   },
 };
 </script>
+
 <style>
 html,
 body,

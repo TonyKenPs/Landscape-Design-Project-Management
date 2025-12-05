@@ -2,7 +2,7 @@
   <div class="login">
     <section class="form_container">
       <div class="manage_tip">
-        <span class="title">景观设计管理系统</span>
+        <span class="title">管理系统</span>
         <el-form
           :model="loginUser"
           :rules="rules"
@@ -24,15 +24,18 @@
               placeholder="请输入密码"
             ></el-input>
           </el-form-item>
-          <el-button
-            type="primary"
-            class="submit_btn"
-            @click="submitForm('loginForm')"
-            >登录</el-button
-          >
-          <el-button type="primary" class="submit_btn" @click="toRegister()"
-            >注册</el-button
-          >
+
+          <div class="btn_group">
+            <el-button
+              type="primary"
+              class="submit_btn"
+              @click="submitForm('loginForm')"
+              >登录</el-button
+            >
+            <el-button type="primary" class="submit_btn" @click="toRegister()"
+              >注册</el-button
+            >
+          </div>
         </el-form>
       </div>
     </section>
@@ -40,21 +43,15 @@
 </template>
 
 <script>
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+
 export default {
   name: "login",
-  components: {},
   data() {
     return {
       loginUser: {
         username: "",
         password: "",
-        password2: "",
-        department: "",
-        phone: "",
-        gender: "",
-        name: "",
-        identity: "",
       },
       rules: {
         username: [
@@ -75,46 +72,35 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm() {
+      this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
-          this.$axios
-            .post("/api/login/logincheck", this.loginUser)
-            .then((res) => {
-              const { identity, token } = res.data.data;
-              localStorage.setItem("token", token);
-              localStorage.setItem("identity", identity);
-              const decoded = jwt_decode(token);
-              this.$store.dispatch("setAuthenticated", !this.isEmpty(decoded));
-              //儲存解碼好的username到Vuex
-              this.$store.dispatch("setUser", decoded);
-              this.$store.dispatch("setIdentity", identity);
-              //Success
-              this.$message({
-                message: "Success,登陆验证成功",
-                type: "success",
-              });
-              this.$router.push("/home");
-            })
-            .catch((res) => {
-              this.$message({
-                message: "用户信息错误",
-                type: "error",
-              });
-            });
+          try {
+            const res = await this.$axios.post(
+              "/api/login/logincheck",
+              this.loginUser
+            );
+            const { identity, token } = res.data.data;
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("identity", JSON.stringify(identity));
+
+            const decoded = jwt_decode(token);
+
+            this.$store.dispatch("setAuthenticated", true);
+            this.$store.dispatch("setUser", decoded);
+            this.$store.dispatch("setIdentity", identity);
+
+            this.$message.success("登录成功");
+            this.$router.push("/home");
+          } catch (err) {
+            this.$message.error("用户名或密码错误");
+          }
         }
       });
     },
     toRegister() {
       this.$router.push("/register");
-    },
-    isEmpty(value) {
-      return (
-        value === undefined ||
-        value === null ||
-        (typeof value === "object" && Object.keys(value).length === 0) ||
-        (typeof value === "string" && value.trim().length === 0)
-      );
     },
   },
 };
@@ -122,36 +108,40 @@ export default {
 
 <style scoped>
 .login {
-  position: relative;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background: url(../assets/bg.jpg) no-repeat center center;
-  background-size: 100% 100%;
+  background-size: cover;
+
+  /* 居中容器 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .form_container {
-  width: 370px;
-  height: 210px;
-  position: absolute;
-  top: 25%;
-  left: 45%;
-  padding: 25px;
-  border-radius: 5px;
-  text-align: center;
+  width: 400px;
+  padding: 30px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
-.form_container .manage_tip .title {
-  font-family: "Microsoft YaHei";
+
+.manage_tip .title {
+  display: block;
   font-weight: bold;
   font-size: 26px;
-  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 }
+
 .loginForm {
-  margin-top: 20px;
-  background-color: #fff;
-  padding: 20px 40px 20px 20px;
-  border-radius: 5px;
-  box-shadow: 0px 5px 10px #cccc;
+  width: 100%;
 }
-.submit_btn {
-  width: 40%;
+
+.btn_group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 </style>
