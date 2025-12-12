@@ -15,7 +15,7 @@
     "element-plus": "^2.11.9",
     "jwt-decode": "^4.0.0",
     "vue": "^3.5.25",
-    "vue-router": "^4.6.3",
+    "vue-router": "^4.6.4",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
