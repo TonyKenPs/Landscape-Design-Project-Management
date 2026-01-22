@@ -10,7 +10,7 @@
     "@vue/compat": "^3.5.27",
     "async-validator": "^4.2.5",
     "axios": "^1.13.2",
-    "core-js": "^3.47.0",
+    "core-js": "^3.48.0",
     "echarts": "^6.0.0",
     "element-plus": "^2.13.1",
     "jwt-decode": "^4.0.0",
