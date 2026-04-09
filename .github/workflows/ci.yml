@@ -43,5 +43,5 @@ jobs:
           cd client && npm run build
 
       - name: Dependabot metadata
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@v3
         if: ${{ github.actor == 'dependabot[bot]' }}
