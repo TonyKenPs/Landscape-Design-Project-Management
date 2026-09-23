@@ -7,7 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "@vue/compat": "^3.5.42",
+    "@vue/compat": "^3.5.43",
     "async-validator": "^4.2.5",
     "axios": "^1.20.0",
     "core-js": "^3.49.0",
