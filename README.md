@@ -139,7 +139,7 @@ npm run build                 # 产物输出到 client/dist
 ## 已知限制
 
 - 前端头像使用 Gravatar 外链，内网或离线环境加载失败（不影响功能）。
-- `uuid`（经 `sequelize` 传递依赖）存在 1 条 moderate 告警，sequelize 6 暂无修复版本。
+- `uuid` 通过 `overrides` 固定在 11.1.1（sequelize 6 仍声明 `^8.3.2`）；sequelize 只调用 `v1()`/`v4()`，升级后已实测兼容，若后续 sequelize 自行升级到 uuid 11，可移除这条 override。
 
 ## 开发约定
 
