@@ -20,6 +20,8 @@
 - MySQL 5.7 或 8.0
 - npm
 
+CI（GitHub Actions）使用 Node 22 构建前端。
+
 ## 目录结构
 
 ```
@@ -138,7 +140,6 @@ npm run build                 # 产物输出到 client/dist
 
 - 前端头像使用 Gravatar 外链，内网或离线环境加载失败（不影响功能）。
 - `uuid`（经 `sequelize` 传递依赖）存在 1 条 moderate 告警，sequelize 6 暂无修复版本。
-- CI 工作流使用 Node 18，而 Vite 8 要求 20.19+；运行 `npm run build` 前建议把 workflow 中的 `node-version` 提升到 20 或 22。
 
 ## 开发约定
 
