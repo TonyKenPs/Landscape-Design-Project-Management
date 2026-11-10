@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import { useAuthStore } from "@/store/auth";
+
 export default {
   name: "head-nav",
   computed: {
@@ -62,11 +64,9 @@ export default {
     showInfoList() {
       this.$router.push("/infoshow");
     },
-    logout() {
-      localStorage.removeItem("token");
-      //设置Vuex store
-      this.$store.dispatch("clearCurrentState");
-      //
+    async logout() {
+      // 清除 httpOnly Cookie 并重置 store
+      await useAuthStore().logout();
       this.$router.push("/login");
     },
   },

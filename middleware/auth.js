@@ -1,17 +1,36 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const env = require("../config/env");
+const { readSessionToken } = require("../lib/session");
+
+// Reads the JWT from the httpOnly session cookie first, then falls back to a
+// bearer header for non-browser clients. Plain string slicing replaces the
+// previous /^Bearer\s+(.+)$/ regex, which backtracked polynomially on long
+// Authorization headers (CodeQL js/polynomial-redos).
+function extractToken(req) {
+  const cookieToken = readSessionToken(req);
+  if (cookieToken) {
+    return cookieToken;
+  }
+
+  const header = req.get("authorization") || "";
+  const prefix = "bearer ";
+  if (header.length > prefix.length && header.slice(0, prefix.length).toLowerCase() === prefix) {
+    return header.slice(prefix.length).trim();
+  }
+
+  return "";
+}
 
 async function requireAuth(req, res, next) {
-  const header = req.get("authorization") || "";
-  const match = /^Bearer\s+(.+)$/i.exec(header);
+  const token = extractToken(req);
 
-  if (!match) {
+  if (!token) {
     return res.status(401).json({ meta: { msg: "Authentication required", status: 401 } });
   }
 
   try {
-    const payload = jwt.verify(match[1], env.jwtSecret, { algorithms: ["HS256"] });
+    const payload = jwt.verify(token, env.jwtSecret, { algorithms: ["HS256"] });
     const user = await User.findByPk(payload.sub, { attributes: ["id", "username", "identity"] });
 
     if (!user) {
@@ -32,4 +51,4 @@ function requireAdmin(req, res, next) {
   return next();
 }
 
-module.exports = { requireAuth, requireAdmin };
+module.exports = { requireAuth, requireAdmin, extractToken };

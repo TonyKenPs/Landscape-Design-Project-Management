@@ -3,6 +3,7 @@ const app = express();
 //导出接收 post 请求数据模块
 const helmet = require("helmet");
 const { requireAuth } = require("./middleware/auth");
+const { apiLimiter } = require("./middleware/rateLimit");
 
 //user.js
 const router = require("./routes/api/users");
@@ -26,6 +27,15 @@ app.disable("x-powered-by");
 app.use(helmet());
 app.use(express.urlencoded({ extended: false, limit: "100kb" }));
 app.use(express.json({ limit: "100kb" }));
+
+// Behind a reverse proxy every request would otherwise share one bucket, so the
+// proxy is only trusted when it is explicitly configured.
+if (process.env.TRUST_PROXY === "1") {
+  app.set("trust proxy", 1);
+}
+
+// Applies to every route below, including the routers mounted further down.
+app.use(apiLimiter);
 
 //测试主页
 app.get("/", (req, res) => {

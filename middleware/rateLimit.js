@@ -1,46 +1,28 @@
-// Minimal in-process fixed-window limiter for the authentication endpoints.
-// Intentionally dependency-free: there is no third-party package to audit, and
-// the state never leaves the process.
+// Rate limiting for the Express routes.
+//
+// express-rate-limit is used instead of a hand-rolled limiter: it is the
+// middleware CodeQL recognises for js/missing-rate-limiting, and it handles
+// IPv6, standard rate-limit headers and memory-store expiry correctly.
+
+const { rateLimit } = require("express-rate-limit");
 
 const WINDOW_MS = 15 * 60 * 1000;
-const MAX_ATTEMPTS = 10;
 
-const attempts = new Map();
-
-// Drop expired buckets so the map cannot grow without bound.
-const sweeper = setInterval(() => {
-  const now = Date.now();
-  for (const [key, bucket] of attempts) {
-    if (bucket.resetAt <= now) {
-      attempts.delete(key);
-    }
-  }
-}, WINDOW_MS);
-if (typeof sweeper.unref === "function") {
-  sweeper.unref();
+function buildLimiter(limit, message) {
+  return rateLimit({
+    windowMs: WINDOW_MS,
+    limit,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    message: { data: null, meta: { msg: message, status: 429 } },
+  });
 }
 
-function authRateLimit(req, res, next) {
-  const now = Date.now();
-  const key = req.ip || (req.socket && req.socket.remoteAddress) || "unknown";
-  const bucket = attempts.get(key);
+// Broad protection for every route.
+const apiLimiter = buildLimiter(300, "请求过于频繁，请稍后再试");
 
-  if (!bucket || bucket.resetAt <= now) {
-    attempts.set(key, { count: 1, resetAt: now + WINDOW_MS });
-    return next();
-  }
+// Stricter budget for the unauthenticated entry points, so credential
+// stuffing and mass registration stay expensive.
+const authLimiter = buildLimiter(10, "尝试次数过多，请稍后再试");
 
-  bucket.count += 1;
-  if (bucket.count > MAX_ATTEMPTS) {
-    const retryAfter = Math.max(1, Math.ceil((bucket.resetAt - now) / 1000));
-    res.set("Retry-After", String(retryAfter));
-    return res.status(429).json({
-      data: null,
-      meta: { msg: "尝试次数过多，请稍后再试", status: 429 },
-    });
-  }
-
-  return next();
-}
-
-module.exports = { authRateLimit, WINDOW_MS, MAX_ATTEMPTS };
+module.exports = { apiLimiter, authLimiter, WINDOW_MS };

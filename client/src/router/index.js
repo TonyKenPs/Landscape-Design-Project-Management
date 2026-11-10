@@ -40,22 +40,24 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+// 登录、注册不拦
+const PUBLIC_PATHS = ['/login', '/register'];
+
+router.beforeEach(async (to) => {
   const auth = useAuthStore();
 
-  const isLogin = auth.isAuthenticated || localStorage.token;
+  if (PUBLIC_PATHS.includes(to.path)) {
+    return true;
+  }
 
-  // 登录、注册不拦
-  if (to.path === '/login' || to.path === '/register') {
-    return next();
+  // The token is an httpOnly cookie now, so the guard probes the API once per
+  // page load instead of reading localStorage.
+  if (await auth.ensureSession()) {
+    return true;
   }
 
   // 未登录 → login
-  if (!isLogin) {
-    return next('/login');
-  }
-
-  next();
+  return { path: '/login', query: { redirect: to.fullPath } };
 });
 
 export default router;

@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import { jwtDecode } from "jwt-decode";
-
 export default {
   name: "login",
   data() {
@@ -74,28 +72,27 @@ export default {
   methods: {
     submitForm() {
       this.$refs.loginForm.validate(async (valid) => {
-        if (valid) {
-          try {
-            const res = await this.$axios.post(
-              "/api/login/logincheck",
-              this.loginUser
-            );
-            const { identity, token } = res.data.data;
+        if (!valid) {
+          return;
+        }
+        try {
+          const res = await this.$axios.post(
+            "/api/login/logincheck",
+            this.loginUser
+          );
+          // 令牌只保存在 httpOnly Cookie 中，这里只记录展示用的信息。
+          const { username, identity } = res.data.data;
 
-            localStorage.setItem("token", token);
-            localStorage.setItem("identity", JSON.stringify(identity));
+          this.$store.dispatch("setAuthenticated", true);
+          this.$store.dispatch("setUser", { username, identity });
+          this.$store.dispatch("setIdentity", identity);
 
-            const decoded = jwtDecode(token);
-
-            this.$store.dispatch("setAuthenticated", true);
-            this.$store.dispatch("setUser", decoded);
-            this.$store.dispatch("setIdentity", identity);
-
-            this.$message.success("登录成功");
-            this.$router.push("/home");
-          } catch (err) {
-            this.$message.error("用户名或密码错误");
-          }
+          this.$message.success("登录成功");
+          this.$router.push("/home");
+        } catch (err) {
+          this.$message.error(
+            err.response?.data?.meta?.msg || "用户名或密码错误"
+          );
         }
       });
     },

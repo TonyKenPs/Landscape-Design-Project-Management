@@ -3,3 +3,4 @@ client/src/assets/bg.jpg
 .env
 client/dist
 npm-audit-*.json
+.npm-cache

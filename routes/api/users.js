@@ -14,7 +14,12 @@ router.get("/test", (req, res) => {
 
 router.get("/current", (req, res) => {
     res.json({
-        msg: "success"
+        data: {
+            id: req.auth?.id,
+            username: req.auth?.username,
+            identity: req.auth?.identity
+        },
+        meta: { msg: "success", status: 200 }
     });
 })
 

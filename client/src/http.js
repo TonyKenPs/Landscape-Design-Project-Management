@@ -22,17 +22,15 @@ function endLoading() {
 const service = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API || "",
   timeout: 10000,
+  // The session token lives in an httpOnly cookie, so requests must carry
+  // credentials instead of an Authorization header set from localStorage.
+  withCredentials: true,
 });
 
 // 请求拦截器
 service.interceptors.request.use(
   (config) => {
     startLoading();
-
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
     return config;
   },
   (error) => {
@@ -50,7 +48,14 @@ service.interceptors.response.use(
   },
   (error) => {
     endLoading();
-    ElMessage.error(error.response?.data?.meta?.msg || error.response?.data?.message || "请求失败，请稍后重试");
+    // 401 交给路由守卫处理；在这里弹提示会在每次匿名访问时误报。
+    if (error.response?.status !== 401) {
+      ElMessage.error(
+        error.response?.data?.meta?.msg ||
+          error.response?.data?.message ||
+          "请求失败，请稍后重试"
+      );
+    }
     return Promise.reject(error);
   }
 );

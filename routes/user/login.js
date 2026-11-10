@@ -2,6 +2,7 @@ const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
 const env = require("../../config/env");
 const { hashPassword, isPasswordHash, verifyPassword } = require("../../lib/password");
+const { setSessionCookie } = require("../../lib/session");
 
 // One response for every failed login: the caller must not learn whether the
 // username exists.
@@ -44,11 +45,14 @@ module.exports = async (req, res) => {
     env.jwtSecret,
     { algorithm: "HS256", expiresIn: env.jwtExpiresIn }
   );
+  // The token only travels in the httpOnly cookie; the body carries just the
+  // display data the UI needs.
+  setSessionCookie(res, token, env.jwtExpiresIn);
   res.status(200).send({
     data: {
-      username: username,
-      identity:findUser.identity,
-      token,
+      username: findUser.username,
+      name: findUser.name,
+      identity: findUser.identity,
     },
     meta: {
       msg: "Logined!",

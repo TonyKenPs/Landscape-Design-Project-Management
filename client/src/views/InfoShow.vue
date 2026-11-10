@@ -28,12 +28,12 @@
   </div>
 </template>
 <script>
-import { jwtDecode } from "jwt-decode";
 export default {
   name: "infoshow",
   data() {
     return {
       identity: "",
+      userData: [],
     };
   },
   created() {
@@ -45,19 +45,12 @@ export default {
     },
   },
   methods: {
-    getDesignerName() {
-      this.$axios.get("/api/user/getuser").then((res) => {
-        for (let index = 0; index < res.data.length; index++) {
-          const decoded = jwtDecode(localStorage.token);
-          //console.log(res.data[index].username);
-          //console.log(decoded.username);
-          if (decoded.username == res.data[index].username) {
-            this.identity = res.data[index].identity;
-          }
-        }
-        this.userData = res.data;
-        //console.log(res.data);
-      });
+    async getDesignerName() {
+      const res = await this.$axios.get("/api/user/getuser");
+      // 当前用户来自 Pinia store，不再从 localStorage 里的 JWT 解析。
+      const mine = res.data.find((item) => item.username === this.user.username);
+      this.identity = mine ? mine.identity : "";
+      this.userData = res.data;
     },
   },
 };
