@@ -1,23 +1,25 @@
-# 前端部分
+﻿# Client
 
-### 需自行配置bg.jpg，位置为
-```
-/src/assets/bg.jpg
-```
-# client
+Vue 3 + Vite frontend.
 
-## Project setup
-```
+Place the project background image at `src/assets/bg.jpg`.
+
+## Setup
+
+```sh
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+## Development
+
+```sh
+npm run dev
 ```
 
-### Compiles and minifies for production
-```
+The Vite development server proxies `/api` requests to the backend at `http://localhost:34586`.
+
+## Production build
+
+```sh
 npm run build
 ```
-

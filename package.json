@@ -11,14 +11,17 @@
   "author": "TonyKen",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "express": "^4.22.0",
-    "jsonwebtoken": "^9.0.0",
-    "moment": "^2.29.4",
-    "mysql2": "^3.15.3",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
-    "sequelize": "^6.37.7",
-    "vue": "^3.5.25"
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.24.6",
+    "sequelize": "^6.37.8"
+  },
+  "overrides": {
+    "dottie": "2.0.7",
+    "lodash": "4.18.1",
+    "moment": "2.31.0"
   }
 }

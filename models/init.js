@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
+const env = require("../config/env");
 
-const sequelize = new Sequelize("landscape", "root", "root", {
+const sequelize = new Sequelize(env.dbName, env.dbUser, env.dbPassword, {
   host: "127.0.0.1", //数据库所在服务器
   dialect: "mysql", //数据库类型
   port: "3306", //数据库远端端口
@@ -10,6 +11,8 @@ const sequelize = new Sequelize("landscape", "root", "root", {
     acquire: 60000,
     idle: 30000,
   },
+  host: env.dbHost,
+  port: env.dbPort,
 });
 
 sequelize

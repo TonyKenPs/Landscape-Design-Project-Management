@@ -4,7 +4,7 @@ import { ElMessage, ElLoading } from "element-plus";
 
 let loadingInstance;
 
-// 开启 Loading
+// 开启 loading
 function startLoading() {
   loadingInstance = ElLoading.service({
     lock: true,
@@ -13,16 +13,14 @@ function startLoading() {
   });
 }
 
-// 关闭 Loading
+// 关闭 loading
 function endLoading() {
-  if (loadingInstance) {
-    loadingInstance.close();
-  }
+  loadingInstance && loadingInstance.close();
 }
 
 // 创建 axios 实例
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API || "", // 可配置基础路径
+  baseURL: import.meta.env.VITE_APP_BASE_API || "",
   timeout: 10000,
 });
 
@@ -30,7 +28,7 @@ const service = axios.create({
 service.interceptors.request.use(
   (config) => {
     startLoading();
-    // 可在此统一挂载 token
+
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -47,14 +45,12 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     endLoading();
-    // 可以在这里统一处理接口返回错误码
+    // 返回完整 response，兼容旧页面中 res.data 的读取方式
     return response;
   },
   (error) => {
     endLoading();
-    ElMessage.error(
-      error.response?.data?.message || "请求失败，请稍后重试"
-    );
+    ElMessage.error(error.response?.data?.message || "请求失败，请稍后重试");
     return Promise.reject(error);
   }
 );

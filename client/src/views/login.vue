@@ -85,7 +85,7 @@ export default {
             localStorage.setItem("token", token);
             localStorage.setItem("identity", JSON.stringify(identity));
 
-            const decoded = jwt_decode(token);
+            const decoded = jwtDecode(token);
 
             this.$store.dispatch("setAuthenticated", true);
             this.$store.dispatch("setUser", decoded);

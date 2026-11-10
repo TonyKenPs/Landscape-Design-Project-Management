@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import HeadNav from "../components/HeadNav";
-import LeftMenu from "../components/LeftMenu";
+import HeadNav from "../components/HeadNav.vue";
+import LeftMenu from "../components/LeftMenu.vue";
 export default {
   name: "index",
   components: { HeadNav, LeftMenu },

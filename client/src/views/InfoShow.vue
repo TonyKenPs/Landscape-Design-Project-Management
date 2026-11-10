@@ -48,7 +48,7 @@ export default {
     getDesignerName() {
       this.$axios.get("/api/user/getuser").then((res) => {
         for (let index = 0; index < res.data.length; index++) {
-          const decoded = jwt_decode(localStorage.token);
+          const decoded = jwtDecode(localStorage.token);
           //console.log(res.data[index].username);
           //console.log(decoded.username);
           if (decoded.username == res.data[index].username) {

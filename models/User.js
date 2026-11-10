@@ -31,6 +31,7 @@ const User = sequelize.define("users", {
     type: Sequelize.STRING,
 
     allowNull: false,
+    defaultValue: "staff",
   },
   name: {
     type: Sequelize.STRING,

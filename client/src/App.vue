@@ -4,52 +4,56 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { onMounted } from "vue";
 import { jwtDecode } from "jwt-decode";
 
-export default {
-  name: "App",
+// 这里假设你有一个 Pinia Store，如 useAuthStore
+import { useAuthStore } from "@/store/auth";
 
-  created() {
-    // 未登录情况：清空 store
-    if (!localStorage.token) {
-      this.$store.dispatch("clearCurrentState");
-      return;
-    }
+const auth = useAuthStore();
 
-    // 解析 token
-    let decoded;
-    try {
-      decoded = jwt_decode(localStorage.token);
-    } catch (err) {
-      localStorage.removeItem("token");
-      this.$store.dispatch("clearCurrentState");
-      return;
-    }
+onMounted(() => {
+  // 未登录情况：清空 store
+  if (!localStorage.token) {
+    auth.clearCurrentState();
+    return;
+  }
 
-    // 过期检查
-    const now = Date.now() / 1000;
-    if (decoded.exp && decoded.exp < now) {
-      localStorage.removeItem("token");
-      this.$store.dispatch("clearCurrentState");
-      return;
-    }
+  // 解析 token
+  let decoded;
+  try {
+    decoded = jwtDecode(localStorage.token);
+  } catch (err) {
+    localStorage.removeItem("token");
+    auth.clearCurrentState();
+    return;
+  }
 
-    // 正常设置
-    this.$store.dispatch("setAuthenticated", true);
-    this.$store.dispatch("setUser", decoded);
+  // 过期检查
+  const now = Date.now() / 1000;
+  if (decoded.exp && decoded.exp < now) {
+    localStorage.removeItem("token");
+    auth.clearCurrentState();
+    return;
+  }
 
-    // identity 解析
-    let identity = {};
-    try {
-      identity = localStorage.identity ? JSON.parse(localStorage.identity) : {};
-    } catch (e) {
-      identity = {};
-    }
+  // 正常设置
+  auth.setAuthenticated(true);
+  auth.setUser(decoded);
 
-    this.$store.dispatch("setIdentity", identity);
-  },
-};
+  // identity 解析
+  let identity = {};
+  try {
+    identity = localStorage.identity
+      ? JSON.parse(localStorage.identity)
+      : {};
+  } catch (e) {
+    identity = {};
+  }
+
+  auth.setIdentity(identity);
+});
 </script>
 
 <style>

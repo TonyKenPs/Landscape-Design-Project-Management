@@ -37,7 +37,7 @@
         >
         </el-table-column>
         <el-table-column label="已用总预算(万)" align="center" width="230">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span
               v-for="item in designData"
               v-if="scope.row.department_id == item.department_id"
@@ -48,7 +48,7 @@
           </template>
         </el-table-column>
         <el-table-column label="剩余(万)" align="center" width="230">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span
               v-for="item in designData"
               v-if="scope.row.department_id == item.department_id"
@@ -71,7 +71,7 @@
           label="操作"
           fixed="right"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <el-button
               size="mini"
               type="info"
@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import Dialog from "../components/DepDialog";
+import Dialog from "../components/DepDialog.vue";
 export default {
   name: "designList",
   data() {

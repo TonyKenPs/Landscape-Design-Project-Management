@@ -1,2 +1,5 @@
 node_modules
 client/src/assets/bg.jpg
+.env
+client/dist
+npm-audit-*.json

@@ -68,7 +68,7 @@
         >
         </el-table-column>
         <el-table-column label="设计师" align="center" width="180">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span
               v-for="item in userData"
               v-if="scope.row.designer_id == item.id"
@@ -79,7 +79,7 @@
           </template>
         </el-table-column>
         <el-table-column label="部门" align="center" width="170">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span v-if="scope.row.department_id == 1">地产</span>
             <span v-else>文旅</span>
           </template>
@@ -100,7 +100,7 @@
           align="center"
           width="250"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <i class="el-icon-time"></i>
             <span style="margin-left: 10px">{{ scope.row.date }}</span>
           </template>
@@ -111,7 +111,7 @@
         <el-table-column prop="level" label="优先级" width="150" align="center">
         </el-table-column>
         <el-table-column prop="operation" label="操作" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <el-button
               size="mini"
               type="info"
@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import Dialog from "../components/Dialog";
+import Dialog from "../components/Dialog.vue";
 export default {
   name: "designList",
   data() {

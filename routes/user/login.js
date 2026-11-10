@@ -1,5 +1,7 @@
 const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
+const env = require("../../config/env");
+const { hashPassword, isPasswordHash, verifyPassword } = require("../../lib/password");
 module.exports = async (req, res) => {
   //查询页面传回数据
   const { username, password } = req.body;
@@ -19,7 +21,7 @@ module.exports = async (req, res) => {
     });
     return;
   }
-  if (username != findUser.username || password != findUser.password) {
+  if (!(await verifyPassword(findUser.password, password))) {
     res.status(400).send({
       data: "用户信息错误",
       meta: {
@@ -29,7 +31,14 @@ module.exports = async (req, res) => {
     });
     return;
   }
-  const token = jwt.sign({ username }, "tonyken");
+  if (!isPasswordHash(findUser.password)) {
+    await findUser.update({ password: await hashPassword(password) });
+  }
+  const token = jwt.sign(
+    { sub: findUser.id, username: findUser.username, identity: findUser.identity },
+    env.jwtSecret,
+    { algorithm: "HS256", expiresIn: env.jwtExpiresIn }
+  );
   res.status(200).send({
     data: {
       username: username,
