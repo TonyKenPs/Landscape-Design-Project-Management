@@ -3,7 +3,6 @@ const app = express();
 //导出接收 post 请求数据模块
 const helmet = require("helmet");
 const { requireAuth } = require("./middleware/auth");
-//const passport = require("passport");
 
 //user.js
 const router = require("./routes/api/users");
@@ -27,10 +26,6 @@ app.disable("x-powered-by");
 app.use(helmet());
 app.use(express.urlencoded({ extended: false, limit: "100kb" }));
 app.use(express.json({ limit: "100kb" }));
-
-//passport初始化
-//app.use(passport.initialize());
-//require("./config/passport")(passport)
 
 //测试主页
 app.get("/", (req, res) => {
