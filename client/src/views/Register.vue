@@ -126,9 +126,9 @@ export default {
             trigger: "blur",
           },
           {
-            min: 6,
+            min: 8,
             max: 30,
-            message: "长度在6到30字符间",
+            message: "长度在8到30字符间",
             trigger: "blur",
           },
         ],
@@ -160,6 +160,11 @@ export default {
           {
             required: true,
             message: "电话不能为空",
+            trigger: "blur",
+          },
+          {
+            pattern: /^\+?[0-9][0-9\s-]{5,19}$/,
+            message: "请输入有效的电话号码",
             trigger: "blur",
           },
         ],

@@ -18,7 +18,8 @@ const User = sequelize.define("users", {
     allowNull: false,
   },
   phone: {
-    type: Sequelize.INTEGER,
+    // 电话号码以字符串保存：11 位手机号超出 MySQL INT 范围，且前导 0 需要保留。
+    type: Sequelize.STRING(20),
 
     allowNull: false,
   },
