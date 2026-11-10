@@ -13,8 +13,7 @@ module.exports = async (req, res) => {
   const model = await User.findOne({ where: { username } });
   //先判断是否已存在重复用户名，避免重复注册
   if (model) {
-    console.log("ERROR")
-    res.status(400).send({ data: null, msg: "用户名已存在", status: 400 });
+    res.status(400).send({ data: null, meta: { msg: "用户名已存在", status: 400 } });
   } else {
     //创建用户
     const CreateUser = await User.create({

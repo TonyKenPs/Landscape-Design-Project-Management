@@ -1,12 +1,13 @@
 const express = require("express");
 const { requireAdmin, requireAuth } = require("../middleware/auth");
+const { authRateLimit } = require("../middleware/rateLimit");
 
 const main = express.Router();
 main.get("/", (req, res) => {
   res.send("main.ok");
 });
-main.post("/register", require("./user/register"));
-main.post("/logincheck", require("./user/login"));
+main.post("/register", authRateLimit, require("./user/register"));
+main.post("/logincheck", authRateLimit, require("./user/login"));
 main.get("/getuser", requireAuth, require("./user/findUser"));
 
 main.post("/designlist", requireAuth, require("./design/design"));

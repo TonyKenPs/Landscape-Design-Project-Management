@@ -50,7 +50,7 @@ service.interceptors.response.use(
   },
   (error) => {
     endLoading();
-    ElMessage.error(error.response?.data?.message || "请求失败，请稍后重试");
+    ElMessage.error(error.response?.data?.meta?.msg || error.response?.data?.message || "请求失败，请稍后重试");
     return Promise.reject(error);
   }
 );
