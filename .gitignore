@@ -4,3 +4,7 @@ client/src/assets/bg.jpg
 client/dist
 npm-audit-*.json
 .npm-cache
+# 本地记忆体系：只保留在本机，不提交（见 AGENTS.md §2.4b）
+AGENTS.md
+MEMORY.md
+memory/
