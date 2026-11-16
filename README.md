@@ -51,7 +51,7 @@ CI（GitHub Actions）使用 Node 22 构建前端。
 CREATE DATABASE landscape CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-表结构由模型在服务启动时通过 `sync()` 自动创建。**从早期版本升级的已有库**还需要执行 `db/migrations/` 下的脚本（例如把 `users.phone` 从 `INT` 改成 `VARCHAR(20)`），否则 11 位手机号仍会写入失败。
+表结构由模型在服务启动时通过 `sync()` 自动创建。`db/migrations/` 下的脚本仅作为迁移示例（例如把 `users.phone` 从 `INT` 改成 `VARCHAR(20)`）：新建库无需执行；若你的库是早期版本遗留且已有 `INT` 列，需自行备份后执行，否则 11 位手机号会写入失败。
 
 ### 2. 启动后端
 
