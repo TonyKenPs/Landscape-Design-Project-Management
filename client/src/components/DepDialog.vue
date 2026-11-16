@@ -2,7 +2,7 @@
   <div class="dialog">
     <el-dialog
       :title="dialog.title"
-      :visible.sync="dialog.show"
+      v-model="dialog.show"
       :close-on-click-modal="false"
       :modal-append-to-body="false"
       width="40%"
